@@ -44,8 +44,8 @@ def sign_up():
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
 
-        if len(email) < 4:
-            flash('Email must be greater than 3 characters.', category='error')
+        if len(email) < 5:
+            flash('Email must be greater than 4 characters.', category='error')
         elif len(first_name) < 2:
             flash('First name must be greater than 1 character.', category='error')
         elif password1 != password2:
@@ -55,7 +55,6 @@ def sign_up():
         else:
             new_user = User(email=email, first_name=first_name,
                             password=generate_password_hash(password1, method='sha256'))
-            #print(new_user)
             db.session.add(new_user)
             db.session.commit()
             login_user(new_user, remember=True)

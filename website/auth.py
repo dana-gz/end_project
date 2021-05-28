@@ -1,3 +1,4 @@
+import sqlalchemy
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 from .models import User
 from . import db
@@ -27,13 +28,21 @@ def login():
 
     return render_template("login.html", user=current_user)
 
+
+@auth.route('/task')
+@login_required
+def task():
+    if not current_user.is_authenticated:
+        return render_template("login.html")
+    else:
+        return render_template("login.html", user=current_user)
+
+
 @auth.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('auth.login'))
-
-
 
 
 @auth.route('/sign_up', methods=['GET', 'POST'])
@@ -53,12 +62,15 @@ def sign_up():
         elif len(password1) < 7:
             flash('Email must at least 7 characters.', category='error')
         else:
-            new_user = User(email=email, first_name=first_name,
-                            password=generate_password_hash(password1, method='sha256'))
-            db.session.add(new_user)
-            db.session.commit()
-            login_user(new_user, remember=True)
-            flash('Account created!', category='success')
-            return redirect(url_for('views.home'))
+            try:
+                new_user = User(email=email, first_name=first_name,
+                                password=generate_password_hash(password1, method='sha256'))
+                db.session.add(new_user)
+                db.session.commit()
+                login_user(new_user, remember=True)
+                flash('Account created!', category='success')
+                return redirect(url_for('views.home'))
+            except sqlalchemy.exc.IntegrityError:
+                flash('The email already registered in the  database.', category='error')
 
     return render_template("sign_up.html", user=current_user)

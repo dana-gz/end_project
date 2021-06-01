@@ -8,3 +8,6 @@
 <p>In the course of project - the module 'add a task' was added .</p>
 
 <p>To the code exception handling - signing up with the email already registered and adding a task by unathorised user was added.  </p>
+
+
+<p>You can see the app working on heroku: https://endproject-dana-gz.herokuapp.com . </p>

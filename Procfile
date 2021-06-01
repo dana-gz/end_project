@@ -1,1 +1,1 @@
-ECHO jest wˆ¥czone.
+web: gunicorn app:app
